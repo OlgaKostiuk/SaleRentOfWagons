@@ -316,7 +316,7 @@ namespace Data
                 && x.RentLevel == rent.RentLevel
                 && x.StartDate >= parentSale.StartDate)
                 .ToList();
-                if (nextSale == null)
+                if (nextSale == null) //если после родительской операции продажи нет продаж
                 {
                     return sameLevelRentsAfterParentSale;
                 }

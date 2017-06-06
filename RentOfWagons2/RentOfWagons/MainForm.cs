@@ -23,14 +23,14 @@ namespace RentOfWagons
             comboBoxWagons.DisplayMember = "Number";
             comboBoxWagons.FormatString = "D8";
             comboBoxWagons.DataSource = UnitOfWork.Instance.OperationRepository.GetAllWagons();
-            
+
         }
 
         private void buttonAddOperation_Click(object sender, EventArgs e)
         {
             AddNewOperation addForm = new AddNewOperation(comboBoxWagons.SelectedItem as Wagon);
             addForm.ShowDialog();
-            if(addForm.DialogResult == DialogResult.OK && dataGridViewOperations.DataSource != null)
+            if (addForm.DialogResult == DialogResult.OK && dataGridViewOperations.DataSource != null)
             {
                 initDataGridViewOperations();
             }
@@ -68,7 +68,7 @@ namespace RentOfWagons
                     Operation selectedOperation = UnitOfWork.Instance.OperationRepository.GetById(selectedOperationID);
 
                     //нельзя удалять операции, которые вступили в силу вчера или раньше 
-                    if(selectedOperation.StartDate < DateTime.Today)
+                    if (selectedOperation.StartDate < DateTime.Today)
                     {
                         throw new Exception("The operation, which is already in force cannot be deleted!");
                     }
@@ -76,8 +76,8 @@ namespace RentOfWagons
                     List<Operation> childOperations = UnitOfWork.Instance.OperationRepository.GetChildOperations(selectedOperation);
 
                     //если есть дочерние операции будет предложено каскадное удаление
-                    if(childOperations.Count > 0)
-                    {                        
+                    if (childOperations.Count > 0)
+                    {
                         List<DataGridViewRow> rows = dataGridViewOperations.Rows
                             .Cast<DataGridViewRow>()
                             .Where(x => childOperations.Select(y => y.OperationID)
@@ -132,7 +132,7 @@ namespace RentOfWagons
                     Operation selectedOperation = UnitOfWork.Instance.OperationRepository.GetById(selectedOperationID);
 
                     //если выбрана операция продажи
-                    if(selectedOperation.RentLevel == 0)
+                    if (selectedOperation.RentLevel == 0)
                     {
                         //нельзя редактировать операцию продажи, если владелец вступил во владение вчера или раньше
                         if (selectedOperation.StartDate < DateTime.Today)
@@ -142,7 +142,7 @@ namespace RentOfWagons
 
                         UpdateSale updateForm = new UpdateSale(selectedOperation);
                         updateForm.ShowDialog();
-                        if (updateForm.DialogResult == DialogResult.OK && dataGridViewOperations.DataSource != null)
+                        if (updateForm.DialogResult == DialogResult.OK)
                         {
                             initDataGridViewOperations();
                         }
@@ -150,19 +150,24 @@ namespace RentOfWagons
                     else //выбрана операция аренды
                     {
                         //нельзя редактировать операцию аренды, если срок аренды уже истек
-                        if(selectedOperation.EndDate < DateTime.Today)
+                        if (selectedOperation.EndDate < DateTime.Today)
                         {
                             throw new Exception("The rent operation, which is already expired cannot be updated!");
                         }
-                        //TODO:
-                        throw new Exception("TODO: Update rent form");
+
+                        UpdateRent updateForm = new UpdateRent(selectedOperation);
+                        updateForm.ShowDialog();
+                        if (updateForm.DialogResult == DialogResult.OK)
+                        {
+                            initDataGridViewOperations();
+                        }
                     }
                 }
                 else
                 {
                     throw new Exception("Select the operation!");
                 }
-                }
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

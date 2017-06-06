@@ -150,9 +150,9 @@
             this.labelEndDate.AutoSize = true;
             this.labelEndDate.Location = new System.Drawing.Point(48, 309);
             this.labelEndDate.Name = "labelEndDate";
-            this.labelEndDate.Size = new System.Drawing.Size(59, 13);
+            this.labelEndDate.Size = new System.Drawing.Size(56, 13);
             this.labelEndDate.TabIndex = 22;
-            this.labelEndDate.Text = "Start date: ";
+            this.labelEndDate.Text = "End date: ";
             // 
             // UpdateRent
             // 
