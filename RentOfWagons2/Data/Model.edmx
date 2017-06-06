@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="RentOfWagonsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Contractors">
+          <Key>
+            <PropertyRef Name="ContractorID" />
+          </Key>
+          <Property Name="ContractorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Departments">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ContractorID" Type="int" />
+        </EntityType>
+        <EntityType Name="Operations">
+          <Key>
+            <PropertyRef Name="OperationID" />
+          </Key>
+          <Property Name="OperationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WagonID" Type="int" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="TransmitterContractorID" Type="int" />
+          <Property Name="TransmitterDepartmentID" Type="int" />
+          <Property Name="ReceiverContractorID" Type="int" Nullable="false" />
+          <Property Name="ReceiverDepartmentID" Type="int" />
+          <Property Name="ContractNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ContractDate" Type="date" Nullable="false" />
+          <Property Name="RentLevel" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OperationTypes">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Attribute" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Wagons">
+          <Key>
+            <PropertyRef Name="WagonID" />
+          </Key>
+          <Property Name="WagonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Number" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ConractorDepartment">
+          <End Role="Contractors" Type="Self.Contractors" Multiplicity="0..1" />
+          <End Role="Departments" Type="Self.Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="ContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiverContractorOperation">
+          <End Role="Contractors" Type="Self.Contractors" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="ReceiverContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiverDepartmentOperation">
+          <End Role="Departments" Type="Self.Departments" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="ReceiverDepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransmitterContractorOperation">
+          <End Role="Contractors" Type="Self.Contractors" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TransmitterContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransmitterDepartmentOperation">
+          <End Role="Departments" Type="Self.Departments" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TransmitterDepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TypeOperation">
+          <End Role="OperationTypes" Type="Self.OperationTypes" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OperationTypes">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WagonOperation">
+          <End Role="Wagons" Type="Self.Wagons" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wagons">
+              <PropertyRef Name="WagonID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="WagonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="RentOfWagonsModelStoreContainer">
+          <EntitySet Name="Contractors" EntityType="Self.Contractors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Operations" EntityType="Self.Operations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OperationTypes" EntityType="Self.OperationTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Wagons" EntityType="Self.Wagons" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ConractorDepartment" Association="Self.FK_ConractorDepartment">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiverContractorOperation" Association="Self.FK_ReceiverContractorOperation">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiverDepartmentOperation" Association="Self.FK_ReceiverDepartmentOperation">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransmitterContractorOperation" Association="Self.FK_TransmitterContractorOperation">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransmitterDepartmentOperation" Association="Self.FK_TransmitterDepartmentOperation">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TypeOperation" Association="Self.FK_TypeOperation">
+            <End Role="OperationTypes" EntitySet="OperationTypes" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WagonOperation" Association="Self.FK_WagonOperation">
+            <End Role="Wagons" EntitySet="Wagons" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RentOfWagonsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Contractor">
+          <Key>
+            <PropertyRef Name="ContractorID" />
+          </Key>
+          <Property Name="ContractorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Departments" Relationship="Self.FK_ConractorDepartment" FromRole="Contractors" ToRole="Departments" />
+          <NavigationProperty Name="Operations" Relationship="Self.FK_ReceiverContractorOperation" FromRole="Contractors" ToRole="Operations" />
+          <NavigationProperty Name="Operations1" Relationship="Self.FK_TransmitterContractorOperation" FromRole="Contractors" ToRole="Operations" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContractorID" Type="Int32" />
+          <NavigationProperty Name="Contractor" Relationship="Self.FK_ConractorDepartment" FromRole="Departments" ToRole="Contractors" />
+          <NavigationProperty Name="Operations" Relationship="Self.FK_ReceiverDepartmentOperation" FromRole="Departments" ToRole="Operations" />
+          <NavigationProperty Name="Operations1" Relationship="Self.FK_TransmitterDepartmentOperation" FromRole="Departments" ToRole="Operations" />
+        </EntityType>
+        <EntityType Name="Operation">
+          <Key>
+            <PropertyRef Name="OperationID" />
+          </Key>
+          <Property Name="OperationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WagonID" Type="Int32" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="TransmitterContractorID" Type="Int32" />
+          <Property Name="TransmitterDepartmentID" Type="Int32" />
+          <Property Name="ReceiverContractorID" Type="Int32" Nullable="false" />
+          <Property Name="ReceiverDepartmentID" Type="Int32" />
+          <Property Name="ContractNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContractDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RentLevel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Contractor" Relationship="Self.FK_ReceiverContractorOperation" FromRole="Operations" ToRole="Contractors" />
+          <NavigationProperty Name="Contractor1" Relationship="Self.FK_TransmitterContractorOperation" FromRole="Operations" ToRole="Contractors" />
+          <NavigationProperty Name="Department" Relationship="Self.FK_ReceiverDepartmentOperation" FromRole="Operations" ToRole="Departments" />
+          <NavigationProperty Name="Department1" Relationship="Self.FK_TransmitterDepartmentOperation" FromRole="Operations" ToRole="Departments" />
+          <NavigationProperty Name="OperationType" Relationship="Self.FK_TypeOperation" FromRole="Operations" ToRole="OperationTypes" />
+          <NavigationProperty Name="Wagon" Relationship="Self.FK_WagonOperation" FromRole="Operations" ToRole="Wagons" />
+        </EntityType>
+        <EntityType Name="OperationType">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Attribute" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Operations" Relationship="Self.FK_TypeOperation" FromRole="OperationTypes" ToRole="Operations" />
+        </EntityType>
+        <EntityType Name="Wagon">
+          <Key>
+            <PropertyRef Name="WagonID" />
+          </Key>
+          <Property Name="WagonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Operations" Relationship="Self.FK_WagonOperation" FromRole="Wagons" ToRole="Operations" />
+        </EntityType>
+        <Association Name="FK_ConractorDepartment">
+          <End Role="Contractors" Type="Self.Contractor" Multiplicity="0..1" />
+          <End Role="Departments" Type="Self.Department" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Departments">
+              <PropertyRef Name="ContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiverContractorOperation">
+          <End Role="Contractors" Type="Self.Contractor" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="ReceiverContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransmitterContractorOperation">
+          <End Role="Contractors" Type="Self.Contractor" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contractors">
+              <PropertyRef Name="ContractorID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TransmitterContractorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceiverDepartmentOperation">
+          <End Role="Departments" Type="Self.Department" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="ReceiverDepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransmitterDepartmentOperation">
+          <End Role="Departments" Type="Self.Department" Multiplicity="0..1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TransmitterDepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TypeOperation">
+          <End Role="OperationTypes" Type="Self.OperationType" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OperationTypes">
+              <PropertyRef Name="TypeID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WagonOperation">
+          <End Role="Wagons" Type="Self.Wagon" Multiplicity="1" />
+          <End Role="Operations" Type="Self.Operation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Wagons">
+              <PropertyRef Name="WagonID" />
+            </Principal>
+            <Dependent Role="Operations">
+              <PropertyRef Name="WagonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="RentOfWagonsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Contractors" EntityType="Self.Contractor" />
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="Operations" EntityType="Self.Operation" />
+          <EntitySet Name="OperationTypes" EntityType="Self.OperationType" />
+          <EntitySet Name="Wagons" EntityType="Self.Wagon" />
+          <AssociationSet Name="FK_ConractorDepartment" Association="Self.FK_ConractorDepartment">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Departments" EntitySet="Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiverContractorOperation" Association="Self.FK_ReceiverContractorOperation">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransmitterContractorOperation" Association="Self.FK_TransmitterContractorOperation">
+            <End Role="Contractors" EntitySet="Contractors" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceiverDepartmentOperation" Association="Self.FK_ReceiverDepartmentOperation">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransmitterDepartmentOperation" Association="Self.FK_TransmitterDepartmentOperation">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TypeOperation" Association="Self.FK_TypeOperation">
+            <End Role="OperationTypes" EntitySet="OperationTypes" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WagonOperation" Association="Self.FK_WagonOperation">
+            <End Role="Wagons" EntitySet="Wagons" />
+            <End Role="Operations" EntitySet="Operations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RentOfWagonsModelStoreContainer" CdmEntityContainer="RentOfWagonsEntities">
+          <EntitySetMapping Name="Contractors">
+            <EntityTypeMapping TypeName="RentOfWagonsModel.Contractor">
+              <MappingFragment StoreEntitySet="Contractors">
+                <ScalarProperty Name="ContractorID" ColumnName="ContractorID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="RentOfWagonsModel.Department">
+              <MappingFragment StoreEntitySet="Departments">
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ContractorID" ColumnName="ContractorID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Operations">
+            <EntityTypeMapping TypeName="RentOfWagonsModel.Operation">
+              <MappingFragment StoreEntitySet="Operations">
+                <ScalarProperty Name="OperationID" ColumnName="OperationID" />
+                <ScalarProperty Name="WagonID" ColumnName="WagonID" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="TransmitterContractorID" ColumnName="TransmitterContractorID" />
+                <ScalarProperty Name="TransmitterDepartmentID" ColumnName="TransmitterDepartmentID" />
+                <ScalarProperty Name="ReceiverContractorID" ColumnName="ReceiverContractorID" />
+                <ScalarProperty Name="ReceiverDepartmentID" ColumnName="ReceiverDepartmentID" />
+                <ScalarProperty Name="ContractNumber" ColumnName="ContractNumber" />
+                <ScalarProperty Name="ContractDate" ColumnName="ContractDate" />
+                <ScalarProperty Name="RentLevel" ColumnName="RentLevel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OperationTypes">
+            <EntityTypeMapping TypeName="RentOfWagonsModel.OperationType">
+              <MappingFragment StoreEntitySet="OperationTypes">
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Attribute" ColumnName="Attribute" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Wagons">
+            <EntityTypeMapping TypeName="RentOfWagonsModel.Wagon">
+              <MappingFragment StoreEntitySet="Wagons">
+                <ScalarProperty Name="WagonID" ColumnName="WagonID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

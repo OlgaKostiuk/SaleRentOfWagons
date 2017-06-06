@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ea8a3d56f1a54abdae4ba612564b30b6" Name="Diagram1">
+        <EntityTypeShape EntityType="RentOfWagonsModel.Contractor" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="RentOfWagonsModel.Department" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RentOfWagonsModel.Operation" Width="1.5" PointX="5.25" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RentOfWagonsModel.OperationType" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RentOfWagonsModel.Wagon" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_ConractorDepartment" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_ReceiverContractorOperation" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_TransmitterContractorOperation" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_ReceiverDepartmentOperation" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_TransmitterDepartmentOperation" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_TypeOperation" ManuallyRouted="false" />
+        <AssociationConnector Association="RentOfWagonsModel.FK_WagonOperation" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
